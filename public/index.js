@@ -167,14 +167,17 @@ const getPlayerStats = () => {
 };
 
 const getAllBots = () => {
-  axios.get("/api/robots").then(({ data }) => {
-    allBotsDiv.innerHTML = "";
+  axios
+    .get("/api/robots")
+    .then(({ data }) => {
+      allBotsDiv.innerHTML = "";
 
-    data.forEach((bot) => {
-      let botHtml = makeRobotDisplayCard(bot);
-      allBotsDiv.innerHTML += botHtml;
-    });
-  });
+      data.forEach((bot) => {
+        let botHtml = makeRobotDisplayCard(bot);
+        allBotsDiv.innerHTML += botHtml;
+      });
+    })
+    .catch((err) => console.log(err.data));
 };
 
 drawBtn.addEventListener("click", drawFive);

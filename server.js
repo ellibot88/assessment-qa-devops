@@ -4,10 +4,20 @@ const app = express();
 const { bots, playerRecord } = require("./data");
 const { shuffleArray } = require("./utils");
 
+var Rollbar = require("rollbar");
+var rollbar = new Rollbar({
+  accessToken: "19ce823e3cea4e0b87ac15f5b6c7f4a8",
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+});
+
+// record a generic message and send it to Rollbar
+rollbar.log("Hello world!");
+
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  //   rollbar.log("accessed site");
+  rollbar.log("accessed site");
   res.sendFile(path.join(__dirname, "./public/index.html"));
 });
 
@@ -21,6 +31,7 @@ app.get("/js", (req, res) => {
 
 app.get("/api/robots", (req, res) => {
   try {
+    let botsArr = bots;
     res.status(200).send(botsArr);
   } catch (error) {
     console.log("ERROR GETTING BOTS", error);
