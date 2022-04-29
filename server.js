@@ -32,8 +32,10 @@ app.get("/js", (req, res) => {
 app.get("/api/robots", (req, res) => {
   try {
     let botsArr = bots;
+    rollbar.log("get all robots");
     res.status(200).send(botsArr);
   } catch (error) {
+    rollbar.error("ERROR GETTING FIVE BOTS");
     console.log("ERROR GETTING BOTS", error);
     res.sendStatus(400);
   }
@@ -46,6 +48,7 @@ app.get("/api/robots/five", (req, res) => {
     let compDuo = shuffled.slice(6, 8);
     res.status(200).send({ choices, compDuo });
   } catch (error) {
+    rollbar.error("ERROR GETTING FIVE BOTS");
     console.log("ERROR GETTING FIVE BOTS", error);
     res.sendStatus(400);
   }
@@ -79,12 +82,15 @@ app.post("/api/duel", (req, res) => {
     // comparing the total health to determine a winner
     if (compHealthAfterAttack > playerHealthAfterAttack) {
       playerRecord.losses++;
+      rollbar.log("Lost recorded");
       res.status(200).send("You lost!");
     } else {
-      playerRecord.losses++;
+      playerRecord.wins++;
+      rollbar.log("Win recorded");
       res.status(200).send("You won!");
     }
   } catch (error) {
+    rollbar.error("ERROR DUELING");
     console.log("ERROR DUELING", error);
     res.sendStatus(400);
   }
@@ -94,6 +100,7 @@ app.get("/api/player", (req, res) => {
   try {
     res.status(200).send(playerRecord);
   } catch (error) {
+    rollbar.error("ERROR GETTING PLAYER STATS");
     console.log("ERROR GETTING PLAYER STATS", error);
     res.sendStatus(400);
   }
